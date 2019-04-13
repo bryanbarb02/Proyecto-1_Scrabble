@@ -5,17 +5,20 @@
  */
 package scrabble;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Bryan
  */
 public class ScrabbleJugador extends UnicastRemoteObject implements ScrabbleJugadorInt {
-private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 	private String nombreUsuario;
 	private IniciarSesionUI iniciarSesion;
 	public JuegoUI juego;
@@ -37,7 +40,7 @@ private static final long serialVersionUID = 1L;
 	
 	public void addJugador(ArrayList<String> st){
             System.out.println(st);
-            iniciarSesion.addPlayerPool(st);
+            iniciarSesion.addJugadorPool(st);
 	}
 
 	public void setIniciarSesionUI(IniciarSesionUI t){ 
@@ -57,7 +60,11 @@ private static final long serialVersionUID = 1L;
 	//start game UI
 	public void iniciarJuego() {
             System.out.println("Empieza el juego...");
+        try {
             iniciarSesion.empezarNuevoJuego();
+        } catch (IOException ex) {
+            Logger.getLogger(ScrabbleJugador.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 	
 	//set game UI for the player
@@ -99,7 +106,7 @@ private static final long serialVersionUID = 1L;
             juego.palabraNoAceptada();
 	}
 	
-	public void nuevoTurno(Character[][] board) {
+	public void newTurno(Character[][] board) {
             juego.setNuevoTurno(board);
 	}
 	

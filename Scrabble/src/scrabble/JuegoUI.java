@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -25,7 +26,7 @@ import javax.swing.JTextArea;
 public class JuegoUI extends JFrame {
 public static final int TAMANO_TABLERO = 20;
 	public static final int TAMANO_MANO = 7;
-	private static final long versionSerieUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
 	JFrame marcoJuego = new JFrame("Scrabble");
 	JButton botonLIMPIAR = new JButton("Limpiar");
@@ -42,16 +43,20 @@ public static final int TAMANO_TABLERO = 20;
 	JButton botonVotarNo = new JButton();
 	JTextArea areaPalabra = new JTextArea();
         //===================================================================================
-	private commitStore[][] = new Character[TAMANO_TABLERO][TAMANO_TABLERO];
+	private Character commitStore[][] = new Character[TAMANO_TABLERO][TAMANO_TABLERO];
         //===================================================================================
 	private ScrabbleJugador jugador;
 	private ScrabbleServidorInt servidor;
 	
 	char letraSeleccionada = 0;
+        String Palabra;
+        Diccionario dict = new Diccionario();
 	
-	public JuegoUI(ScrabbleJugador jugador, ScrabbleServidorInt servidor) {
+	public JuegoUI(ScrabbleJugador jugador, ScrabbleServidorInt servidor) throws IOException {
 		this.jugador = jugador;
 		this.servidor = servidor;
+                this.Palabra = Palabra;
+    
 		try {
 			marcoJuego.setTitle("Scrabble: " + jugador.getNombre());
 		} catch (RemoteException e) {
@@ -73,7 +78,7 @@ public static final int TAMANO_TABLERO = 20;
 		addIntroduccion(marcoJuego);
 		addAreaVotacionLabel(marcoJuego);
 		addAreaVotacionLabel(marcoJuego);
-		addAreaVotación(marcoJuego);
+		addAreaVotacion(marcoJuego);
 		
 		marcoJuego.add(Field);
 		marcoJuego.setLocationRelativeTo(null);
@@ -130,7 +135,7 @@ public static final int TAMANO_TABLERO = 20;
                     letras[i]= new LetraBoton();
                     letras[i].setBounds(640 + i*40, 200, 40, 40);
                     letras[i].setFocusPainted(false);
-                    if(!jugador.getTurn()) {
+                    if(!jugador.getTurno()) {
                         letras[i].setEnabled(false);
                     }
                     frame.add(letras[i]);
@@ -186,7 +191,7 @@ public static final int TAMANO_TABLERO = 20;
             }
 	}
 	
-	public void addAreaVotación(JFrame frame) {			
+	public void addAreaVotacion(JFrame frame) {			
 		areaPalabra = new JTextArea(10,10);
 		areaPalabra.setBounds(640, 300, 150,100);
 		botonVotarSi = new JButton("Yes");
@@ -257,26 +262,78 @@ public static final int TAMANO_TABLERO = 20;
                 @Override
 		public void actionPerformed(ActionEvent e) {
                     //Almacenar nueva letra añadida y su posición
+                    int P;
+                    Palabra ="";
                     for (int i = 0; i < TAMANO_TABLERO; i++) {
                         for (int j = 0; j < TAMANO_TABLERO; j++) {
                             if (botones[i][j].getIcon() != null) {
                                 commitStore[i][j] = botones[i][j].getLetra();
+                                
+                                P = commitStore[i][j];
+                                Palabra = Palabra + P;
+                                
+                                
+            //====================================================================================
+                                //if(palabraCorrecta()){
+                                System.out.print(commitStore[i][j]);
+            //====================================================================================
                             }
                             else {
 				commitStore[i][j] = 0;
                             }
 			}
                     }
-                    try {
-                        servidor.enviarPalabra(commitStore);
+                    if(VerificarPalabra(Palabra)){
+                        try {
+                            servidor.enviarPalabra(commitStore);
                     } 
-                    catch (RemoteException e1) {
-                        e1.printStackTrace();
+                        catch (RemoteException e1) {
+                            e1.printStackTrace();
                     }
-		}
+                                }
+                    else{
+                        for(int i = 0; i < TAMANO_MANO; i++) {
+                            letras[i].setEnabled(true);
+                            letras[i].setFocusPainted(false);
+                            JTextArea palabraIncorrecta = new JTextArea(5,30);
+                            palabraIncorrecta.setText( "Palabra incorrecta, intente de nuevo");
+                            palabraIncorrecta.setBounds(640, 50, 300, 100);
+                            palabraIncorrecta.setEditable(false);
+                            palabraIncorrecta.setBackground(null);
+                            frame.add(palabraIncorrecta);
+                        }
+                        for (int i = 0; i < TAMANO_TABLERO; i++) {
+                            for (int j = 0; j < TAMANO_TABLERO; j++) {
+                            if(botones[i][j].isEnabled()) {
+                                botones[i][j].setLetra((char) 0);
+                                }
+                            }
+                        }
+                                    /*try {
+                                        //servidor.enviarPalabra();
+                                        servidor.enviarPalabra(commitStore);
+                                        servidor.pasar();
+                                        System.out.println("palabra no existe");
+                                    } 
+                                    catch (RemoteException e1) {
+                                         e1.printStackTrace();
+                                    System.out.println("palabra no existe");
+                                    }*/
+                    
+                        }
+                }
             };
             botonCONFIRMAR.addActionListener(click);
 	}
+        
+        public boolean VerificarPalabra(String Palabra){
+            if(dict.BuscarDiccionario(Palabra)){
+                return true;     
+            }
+            else{
+                return false;
+            }
+        }
 	
 	public void setBotonPaso(JFrame frame) {
             botonPASAR.setBounds(830,150,90,40);
@@ -363,8 +420,8 @@ public static final int TAMANO_TABLERO = 20;
                     letras[i].setSelected(false);
                     letras[i].actualizarLetra();
 		}
-		System.out.println(jugador.getTurn());
-                    if(!jugador.getTurn()) {
+		System.out.println(jugador.getTurno());
+                    if(!jugador.getTurno()) {
                         letras[i].setEnabled(false);
                     }
                     else {

@@ -14,6 +14,7 @@ import java.util.Vector;
  * @author Bryan
  */
 public interface ScrabbleServidorInt extends Remote  {
+    
     public boolean iniciarSesion (ScrabbleJugadorInt a)throws RemoteException ;
     public void publicar (String s)throws RemoteException ;
     public Vector<ScrabbleJugadorInt> getConectado() throws RemoteException;

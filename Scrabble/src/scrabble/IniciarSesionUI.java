@@ -7,6 +7,7 @@ package scrabble;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -67,15 +68,15 @@ public class IniciarSesionUI extends JFrame {
             }
 	}
 	 
-	public void empezarNuevoJuego() {
+	public void empezarNuevoJuego() throws IOException {
             loginFrame.setVisible(false);
             cliente.setNuevoJuego(new JuegoUI(cliente,servidor));
 	}
 	 
-	public void addPlayerPool(ArrayList<String> name) {
+	public void addJugadorPool(ArrayList<String> nombre) {
             textArea.setText(null);
-            for(int i=0;i<name.size();i++) {
-                textArea.append(name.get(i) + "\n");
+            for(int i=0;i<nombre.size();i++) {
+                textArea.append(nombre.get(i) + "\n");
             }
 	}
 	
@@ -83,36 +84,36 @@ public class IniciarSesionUI extends JFrame {
 	 * Crear el frame.
 	 */
 	public IniciarSesionUI() {
-            loginFrame.setBounds(100,100,400, 300);
+            loginFrame.setBounds(100,900,450, 300);
             loginFrame.setLayout(null);
 	
-            JLabel lblUsername = new JLabel("Username:");
-            lblUsername.setBounds(46, 27, 66, 16);
+            JLabel lblUsername = new JLabel("Nombre de usuario:");
+            lblUsername.setBounds(12, 27, 200, 16);
             loginFrame.add(lblUsername);
             
-            nombreUsuarioField.setBounds(124, 22, 130, 26);
+            nombreUsuarioField.setBounds(140, 22, 130, 26);
             loginFrame.add(nombreUsuarioField);
             nombreUsuarioField.setColumns(10);
             
-            JLabel lblServerAddress = new JLabel("Server Address:");
-            lblServerAddress.setBounds(17, 74, 102, 16);
+            JLabel lblServerAddress = new JLabel("Dirección del servidor:");
+            lblServerAddress.setBounds(5, 74, 212, 16);
             loginFrame.add(lblServerAddress);
             
-            direccionField.setBounds(124, 69, 130, 26);
+            direccionField.setBounds(140, 69, 130, 26);
             direccionField.setColumns(10);
             loginFrame.add(direccionField);
 
-            btnConectar.setBounds(275, 69, 117, 29);
+            btnConectar.setBounds(275, 149, 157, 29);
             loginFrame.add(btnConectar);
 		
             textArea.setBounds(17, 148, 235, 112);
             loginFrame.add(textArea);
 		
-            JLabel lblAvailablePlayers = new JLabel("Available Players:");
-            lblAvailablePlayers.setBounds(17, 116, 117, 16);
+            JLabel lblAvailablePlayers = new JLabel("Jugadores disponibles:");
+            lblAvailablePlayers.setBounds(17, 116, 217, 16);
             loginFrame.add(lblAvailablePlayers);
 		
-            btnInicio.setBounds(275, 213, 117, 29);
+            btnInicio.setBounds(275, 213, 157, 29);
             loginFrame.add(btnInicio);
 		
             btnConectar.addActionListener(new ActionListener(){

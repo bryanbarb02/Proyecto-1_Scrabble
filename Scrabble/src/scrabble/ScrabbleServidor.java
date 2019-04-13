@@ -6,6 +6,7 @@
 package scrabble;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +17,9 @@ import java.util.Vector;
  *
  * @author Bryan
  */
-public class ScrabbleServidor {
+public class ScrabbleServidor extends UnicastRemoteObject implements ScrabbleServidorInt {
     public static final int TAMANO_TABLERO = 20;
+    
 	private Vector<ScrabbleJugadorInt> listaJugadores = new Vector<ScrabbleJugadorInt>();
 	ArrayList<String> nombreLista = new ArrayList<String>();
 	int jugadorNum, jugadorSeq,votarNum, votarSi,pasarNum;
@@ -26,22 +28,21 @@ public class ScrabbleServidor {
 	ArrayList<String> listaPalabras = new ArrayList<String>();
 	ArrayList<String> nuevaListaPalabras = new ArrayList<String>();
 	Map<String,Integer> puntuacionUsuario = new HashMap<String,Integer>();
-	
+
     protected ScrabbleServidor() throws RemoteException {
     	super();
     }
 
     private static final long serialVersionUID = 1L;
 
-    @Override
-    public boolean login(ScrabbleJugadorInt a) throws RemoteException {
+    public boolean iniciarSesion(ScrabbleJugadorInt a) throws RemoteException {
 	System.out.println(a.getNombre() + "  got connected....");	
 	listaJugadores.add(a);
         jugadorNum++;
 	return true;	
     }
 	
-    public void salirDeTodoElJuego() throws RemoteException {
+    public void salirDelJuego() throws RemoteException {
         System.out.println("Fin del juego...");
         for(int i = 0; i<jugadorNum;i++) {
             ScrabbleJugadorInt tmp5 = (ScrabbleJugadorInt) listaJugadores.get(i);
@@ -49,29 +50,28 @@ public class ScrabbleServidor {
         }
         for(int i = 0; i<jugadorNum;i++) {
             ScrabbleJugadorInt tmp6 = (ScrabbleJugadorInt) listaJugadores.get(i);
-            tmp6.endGame(puntuacionUsuario);
+            tmp6.finJuego(puntuacionUsuario);
             System.out.println(i);
         }
     }
-    @Override
-    public Vector<ScrabbleJugadorInt> getConnected() throws RemoteException {
+    
+    public Vector<ScrabbleJugadorInt> getConectado() throws RemoteException {
 	return listaJugadores;
     }
 
 	//publish player list
-	public void clearName() throws RemoteException {
+	public void borrarNombre() throws RemoteException {
 		nombreLista.clear();
 	}
 	
-	public void addNametoList() throws RemoteException {
+	public void addNombreALista() throws RemoteException {
 		for(int i=0;i<jugadorNum;i++){
 			ScrabbleJugadorInt n=(ScrabbleJugadorInt)listaJugadores.get(i);
 			nombreLista.add(n.getNombre());
 		}
 	
 	}
-	@Override
-	public void publish(String s) throws RemoteException {
+	public void publicar(String s) throws RemoteException {
             for(int i=0;i<jugadorNum;i++){
                 try{
                     ScrabbleJugadorInt tmp=(ScrabbleJugadorInt)listaJugadores.get(i);
@@ -96,7 +96,6 @@ public class ScrabbleServidor {
 	}
 	
 
-	@Override
 	public void iniciarJuego() throws RemoteException {
             jugadorSeq = 0;
             pasarNum =0;
@@ -167,7 +166,7 @@ public class ScrabbleServidor {
             for(int i=0;i<jugadorNum;i++){
                 try{
                     ScrabbleJugadorInt tmp=(ScrabbleJugadorInt)listaJugadores.get(i);
-		    tmp.addWord(nuevaListaPalabras);
+		    tmp.addPalabra(nuevaListaPalabras);
 		}
                 catch(Exception e){
 		    //Problema con el cliente no conectado
@@ -178,7 +177,7 @@ public class ScrabbleServidor {
             votarSi = 0;
 	}
 	
-    public void pass() throws RemoteException {
+    public void pasar() throws RemoteException {
 	pasarNum++;
 	if(pasarNum == jugadorNum) {
             System.out.println("Fin del juego...");
@@ -208,7 +207,7 @@ public class ScrabbleServidor {
 		System.out.println(listaJugadores.get(jugadorSeq).getTurno());
 		for(int i=0;i<jugadorNum;i++){
                     ScrabbleJugadorInt tmp1=(ScrabbleJugadorInt)listaJugadores.get(i);
-                    tmp1.nuevoTurno(Tablero);
+                    tmp1.newTurno(Tablero);
 		}
             } 
             catch (RemoteException e) {
@@ -217,7 +216,7 @@ public class ScrabbleServidor {
             for(int i=0;i<jugadorNum;i++){
                 try{
                     ScrabbleJugadorInt tmp1=(ScrabbleJugadorInt)listaJugadores.get(i);
-                    tmp1.nuevoTurno(Tablero);
+                    tmp1.newTurno(Tablero);
 		    System.out.println("YYYYY");
 		}
                 catch(Exception e){
@@ -228,7 +227,7 @@ public class ScrabbleServidor {
         }		
     }
     
-    synchronized public void vote(boolean votes) throws RemoteException {
+    synchronized public void votar(boolean votes) throws RemoteException {
         votarNum++;
 	if(votes ==true) {
             votarSi++;
@@ -275,7 +274,7 @@ public class ScrabbleServidor {
 		for(int i=0; i<jugadorNum; i++){
                     try{
                         ScrabbleJugadorInt tmp = (ScrabbleJugadorInt)listaJugadores.get(i);
-                        tmp.nuevoTurno(Tablero);
+                        tmp.newTurno(Tablero);
                     }
                     catch(Exception e){
                         //Problema con el cliente no conectado

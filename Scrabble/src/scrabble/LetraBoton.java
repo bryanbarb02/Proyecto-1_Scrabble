@@ -14,7 +14,7 @@ import javax.swing.JButton;
  * @author Bryan
  */
 public class LetraBoton extends JButton {
-ImageIcon A = new ImageIcon("src/image/letter-a.png");
+    ImageIcon A = new ImageIcon("src/image/letter-a.png");
     ImageIcon B = new ImageIcon("src/image/letter-b.png");
     ImageIcon C = new ImageIcon("src/image/letter-c.png");
     ImageIcon D = new ImageIcon("src/image/letter-d.png");
