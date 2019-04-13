@@ -24,7 +24,7 @@ import javax.swing.JTextArea;
  * @author Bryan
  */
 public class JuegoUI extends JFrame {
-public static final int TAMANO_TABLERO = 20;
+public static final int TAMANO_TABLERO = 14;
 	public static final int TAMANO_MANO = 7;
 	private static final long serialVersionUID = 1L;
 	

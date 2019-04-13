@@ -20,8 +20,8 @@ public class Diccionario {
         }
     }
 
-    public boolean BuscarDiccionario(String pal){
-        if(arrList.contains(pal)){
+    public boolean BuscarDiccionario(String palabra){
+        if(arrList.contains(palabra)){
            return true;
         }
         else{
