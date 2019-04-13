@@ -31,7 +31,7 @@ public class FinJuegoUI extends JFrame {
 	JTextArea textArea = new JTextArea();
 	String marcador = "" ;
 	for(String nombre: a.keySet() ) {
-            String printOut ="User "+ nombre +  " got a score of " +a.get(nombre);
+            String printOut ="Usuario "+ nombre +  " tiene una puntuación de " +a.get(nombre);
             marcador = marcador + printOut + "\n";
             System.out.println(marcador);
 	}

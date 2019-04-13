@@ -16,10 +16,10 @@ public class IniciarServidor {
             ScrabbleServidorInt b =new ScrabbleServidor();	
             registro = LocateRegistry.createRegistry(1099);
             registro.rebind("rmi://127.0.0.1/myabc",b);
-            System.out.println("[System] Server is ready.");
+            System.out.println("[Sistema] El servidor está listo.");
 	}
         catch (Exception e) {
-            System.out.println("Server failed: " + e);
+            System.out.println("El servidor falló " + e);
         }	
     }
 }

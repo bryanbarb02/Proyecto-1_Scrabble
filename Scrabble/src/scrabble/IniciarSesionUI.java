@@ -28,7 +28,7 @@ import javax.swing.JTextField;
 public class IniciarSesionUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
-	JFrame loginFrame = new JFrame("Login");
+	JFrame loginFrame = new JFrame("Iniciar Sesión");
 	final JPanel contenidoPanel = new JPanel();;
 	JTextField nombreUsuarioField = new JTextField();;
 	JTextField direccionField = new JTextField();;

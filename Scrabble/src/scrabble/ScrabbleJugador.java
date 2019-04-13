@@ -74,7 +74,7 @@ public class ScrabbleJugador extends UnicastRemoteObject implements ScrabbleJuga
 	
 
 	public void finJuego(Map<String,Integer> a) {
-            System.out.println("ending game...");
+            System.out.println("Final del juego...");
             juego.finJuego(a);
 	}
 	

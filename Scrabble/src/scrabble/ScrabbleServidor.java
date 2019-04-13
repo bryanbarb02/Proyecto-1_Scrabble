@@ -36,7 +36,7 @@ public class ScrabbleServidor extends UnicastRemoteObject implements ScrabbleSer
     private static final long serialVersionUID = 1L;
 
     public boolean iniciarSesion(ScrabbleJugadorInt a) throws RemoteException {
-	System.out.println(a.getNombre() + "  got connected....");	
+	System.out.println(a.getNombre() + "  conectarse....");	
 	listaJugadores.add(a);
         jugadorNum++;
 	return true;	
