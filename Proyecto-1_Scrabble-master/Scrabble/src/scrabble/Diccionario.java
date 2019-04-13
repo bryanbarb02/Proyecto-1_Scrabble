@@ -11,7 +11,7 @@ import java.util.Iterator;
 public class Diccionario {
     ArrayList<String> arrList = new ArrayList<String>();
     private Iterator stepper = arrList.iterator();
-    BufferedReader bufReader = new BufferedReader(new FileReader("Dict.txt"));
+    BufferedReader bufReader = new BufferedReader(new FileReader("Dict1.txt"));
     
     public Diccionario()throws IOException {
         while(bufReader.ready()){
@@ -19,13 +19,16 @@ public class Diccionario {
             arrList.add(strLine);
         }
     }
+    
 
-    public boolean BuscarDiccionario(String palabra){
-        if(arrList.contains(palabra)){
+    public boolean BuscarDiccionario(String Palabra){
+ 
+        if(arrList.contains(Palabra))
+         
            return true;
-        }
-        else{
-           return false;
-        }
+        return true;
+        
+        //return false;
+       
     }
 }
